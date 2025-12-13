@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/hotel_logo.dart';
 import 'login_screen.dart';
+import 'staff/staff_login_screen.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -56,7 +57,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const LoginScreen(isStaff: true),
+                      builder: (_) => const StaffLoginScreen(),
                     ),
                   );
                 },

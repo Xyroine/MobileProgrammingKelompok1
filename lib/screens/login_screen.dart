@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/hotel_logo.dart';
 import 'customer/customer_home_screen.dart';
-import 'staff/staff_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isStaff;
@@ -100,9 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => widget.isStaff
-                            ? const StaffDashboardScreen()
-                            : const CustomerHomeScreen(),
+                        builder: (_) => const CustomerHomeScreen(),
                       ),
                     );
                   },
