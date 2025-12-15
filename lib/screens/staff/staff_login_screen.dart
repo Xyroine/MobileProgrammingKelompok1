@@ -13,30 +13,50 @@ class StaffLoginScreen extends StatefulWidget {
 class _StaffLoginScreenState extends State<StaffLoginScreen> {
   bool _obscurePassword = true;
   
-  // ✅ TAMBAHAN BARU: Controller untuk ambil value
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  // ✅ TAMBAHAN BARU: Key untuk validasi form
   final _formKey = GlobalKey<FormState>();
 
-  // ✅ TAMBAHAN BARU: Fungsi validasi email Gmail
+  // ✅ TAMBAHAN BARU: Variable untuk cek password strength
+  bool _hasMinLength = false;
+  bool _hasUppercase = false;
+  bool _hasLowercase = false;
+  bool _hasDigit = false;
+  bool _hasSpecialChar = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // ✅ Listen perubahan password
+    _passwordController.addListener(_checkPasswordStrength);
+  }
+
+  // ✅ TAMBAHAN BARU: Fungsi cek password strength real-time
+  void _checkPasswordStrength() {
+    final password = _passwordController.text;
+    setState(() {
+      _hasMinLength = password.length >= 8;
+      _hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
+      _hasLowercase = RegExp(r'[a-z]').hasMatch(password);
+      _hasDigit = RegExp(r'[0-9]').hasMatch(password);
+      _hasSpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+    });
+  }
+
   String? _validateGmailEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email tidak boleh kosong';
     }
     
-    // Regex untuk validasi format @gmail.com
     final gmailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
     
     if (!gmailRegex.hasMatch(value)) {
       return 'Email harus berformat @gmail.com';
     }
     
-    return null; // Valid
+    return null;
   }
 
-  // ✅ TAMBAHAN BARU: Fungsi validasi password kuat
   String? _validateStrongPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password tidak boleh kosong';
@@ -46,27 +66,50 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
       return 'Password minimal 8 karakter';
     }
     
-    // Cek huruf besar
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
       return 'Password harus ada huruf besar (A-Z)';
     }
     
-    // Cek huruf kecil
     if (!RegExp(r'[a-z]').hasMatch(value)) {
       return 'Password harus ada huruf kecil (a-z)';
     }
     
-    // Cek angka
     if (!RegExp(r'[0-9]').hasMatch(value)) {
       return 'Password harus ada angka (0-9)';
     }
-    
-    // Cek simbol/tanda
+
     if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-      return 'Password harus ada simbol (!@#$%^&*...)';
+      return 'Password harus ada simbol seperti !@#\$%^&*';
     }
     
-    return null; // Valid
+    return null;
+  }
+
+  // ✅ TAMBAHAN BARU: Widget untuk requirement item
+  Widget _buildRequirement(String text, bool isMet) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(
+            isMet ? Icons.check_circle : Icons.circle_outlined,
+            size: 16,
+            color: isMet ? AppTheme.emeraldGreen : AppTheme.textDarkGray,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 12,
+                color: isMet ? AppTheme.emeraldGreen : AppTheme.textGray,
+                fontWeight: isMet ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTextField({
@@ -74,8 +117,8 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
     required IconData icon,
     bool obscureText = false,
     Widget? suffixIcon,
-    TextEditingController? controller, // ✅ TAMBAHAN BARU
-    String? Function(String?)? validator, // ✅ TAMBAHAN BARU
+    TextEditingController? controller,
+    String? Function(String?)? validator,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -83,31 +126,29 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.borderColor),
       ),
-      child: TextFormField( // ✅ UBAH: TextField → TextFormField
-        controller: controller, // ✅ TAMBAHAN BARU
-        validator: validator, // ✅ TAMBAHAN BARU
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
         obscureText: obscureText,
         style: const TextStyle(color: Colors.white),
         keyboardType: hint.contains('email') 
             ? TextInputType.emailAddress 
-            : TextInputType.text, // ✅ TAMBAHAN BARU
+            : TextInputType.text,
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: const TextStyle(color: AppTheme.textDarkGray),
           prefixIcon: Icon(icon, color: AppTheme.textGray),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          errorStyle: const TextStyle(color: Colors.redAccent), // ✅ TAMBAHAN BARU
+          errorStyle: const TextStyle(color: Colors.redAccent),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
   }
 
-  // ✅ TAMBAHAN BARU: Fungsi handle login dengan validasi
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // Semua valid, lanjut ke dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -115,7 +156,6 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
         ),
       );
     } else {
-      // Ada error, tampilkan notifikasi
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Silakan perbaiki data yang salah'),
@@ -126,9 +166,9 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
     }
   }
 
-  // ✅ TAMBAHAN BARU: Dispose controller
   @override
   void dispose() {
+    _passwordController.removeListener(_checkPasswordStrength); // ✅ TAMBAHAN
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -140,8 +180,8 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
-          child: Form( // ✅ TAMBAHAN BARU: Wrap dengan Form
-            key: _formKey, // ✅ TAMBAHAN BARU
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -157,7 +197,6 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                   child: HotelLogo(size: HotelLogoSize.medium, showTagline: false),
                 ),
                 const SizedBox(height: 40),
-                // Staff Portal Badge
                 Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -201,22 +240,51 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                 _buildTextField(
                   hint: 'Staff email',
                   icon: Icons.email_outlined,
-                  controller: _emailController, // ✅ TAMBAHAN BARU
-                  validator: _validateGmailEmail, // ✅ TAMBAHAN BARU
+                  controller: _emailController,
+                  validator: _validateGmailEmail,
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
                   hint: 'Password',
                   icon: Icons.lock_outline,
                   obscureText: _obscurePassword,
-                  controller: _passwordController, // ✅ TAMBAHAN BARU
-                  validator: _validateStrongPassword, // ✅ TAMBAHAN BARU
+                  controller: _passwordController,
+                  validator: _validateStrongPassword,
                   suffixIcon: IconButton(
                     onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     icon: Icon(
                       _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                       color: AppTheme.textGray,
                     ),
+                  ),
+                ),
+                // ✅ TAMBAHAN BARU: Password Requirements Indicator
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.cardBackground.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppTheme.borderColor.withOpacity(0.5)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Password harus mengandung:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textGray,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildRequirement('Minimal 8 karakter', _hasMinLength),
+                      _buildRequirement('Huruf besar (A-Z)', _hasUppercase),
+                      _buildRequirement('Huruf kecil (a-z)', _hasLowercase),
+                      _buildRequirement('Angka (0-9)', _hasDigit),
+                      _buildRequirement('Simbol (!@#\$%^&*)', _hasSpecialChar),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -232,7 +300,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _handleLogin, // ✅ UBAH: Ganti jadi fungsi validasi
+                    onPressed: _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.emeraldGreen,
                       foregroundColor: Colors.white,
