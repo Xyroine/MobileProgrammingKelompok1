@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import 'analytics_screen.dart';
+import 'room_screen.dart';
 
 class StaffDashboardScreen extends StatefulWidget {
   const StaffDashboardScreen({super.key});
@@ -144,7 +146,12 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
                     child: _QuickActionCard(
                       icon: Icons.analytics,
                       label: 'Analytics',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                            MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -152,7 +159,12 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
                     child: _QuickActionCard(
                       icon: Icons.meeting_room,
                       label: 'Rooms',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                            MaterialPageRoute(builder: (context) => const RoomManagementScreen()),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
