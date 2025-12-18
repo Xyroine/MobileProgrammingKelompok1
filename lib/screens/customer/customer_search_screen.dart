@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import 'customer_room_detail_screen.dart'; // Import ini agar bisa di-klik ke detail
 
 class CustomerSearchScreen extends StatefulWidget {
   const CustomerSearchScreen({super.key});
@@ -15,35 +16,30 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
       "name": "Royal Suite",
       "price": 850,
       "rating": 4.9,
-      "location": "Jakarta, Indonesia",
       "image": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop",
     },
     {
       "name": "Deluxe Room",
       "price": 450,
       "rating": 4.8,
-      "location": "Bali, Indonesia",
       "image": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop",
     },
     {
-      "name": "Presidential Suite",
+      "name": "Presidential",
       "price": 1200,
       "rating": 5.0,
-      "location": "Bandung, Indonesia",
       "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop",
     },
     {
       "name": "Ocean View",
       "price": 600,
       "rating": 4.7,
-      "location": "Lombok, Indonesia",
       "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop",
     },
-     {
+    {
       "name": "Luxury Garden",
       "price": 550,
       "rating": 4.6,
-      "location": "Medan, Indonesia",
       "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1974&auto=format&fit=crop",
     },
   ];
@@ -74,16 +70,19 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // KITA HAPUS SCAFFOLD DI SINI AGAR MENGIKUTI PARENT
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header sederhana pengganti AppBar
-            const Text("Find your room", 
-                style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: 'Serif', fontWeight: FontWeight.bold)),
+            // Header
+            const Text("Find your room",
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontFamily: 'Serif',
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
 
             // --- INPUT PENCARIAN ---
@@ -95,7 +94,7 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
               ),
               child: TextField(
                 onChanged: (value) => _runFilter(value),
-                autofocus: false, // Diubah ke false agar keyboard tidak kaget muncul saat tab pindah
+                autofocus: false,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   hintText: 'Search rooms...',
@@ -109,42 +108,122 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
             ),
             const SizedBox(height: 24),
 
-            // --- LIST HASIL ---
+            // --- GRID HASIL PENCARIAN (2 KOLOM) ---
             Expanded(
               child: _foundRooms.isNotEmpty
-                  ? ListView.builder(
+                  ? GridView.builder(
                       itemCount: _foundRooms.length,
-                      itemBuilder: (context, index) => Card(
-                        color: AppTheme.cardBackground,
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(12),
-                          leading: Container(
-                            width: 60,
-                            height: 60,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // 2 Kolom
+                        crossAxisSpacing: 16, // Jarak horizontal antar card
+                        mainAxisSpacing: 16, // Jarak vertikal antar card
+                        childAspectRatio: 0.75, // Rasio lebar:tinggi card (agar memanjang ke bawah)
+                      ),
+                      itemBuilder: (context, index) {
+                        final room = _foundRooms[index];
+                        return GestureDetector(
+                          onTap: () {
+                             // Navigasi ke Detail jika diklik
+                             Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CustomerRoomDetailScreen()),
+                              );
+                          },
+                          child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: NetworkImage(_foundRooms[index]['image']),
-                                fit: BoxFit.cover,
-                              ),
+                              color: AppTheme.cardBackground,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: AppTheme.borderColor),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // GAMBAR KAMAR
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20)),
+                                      image: DecorationImage(
+                                        image: NetworkImage(room['image']),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    // Rating Overlay di pojok gambar
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        margin: const EdgeInsets.all(12),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.6),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.star,
+                                                color: AppTheme.goldAccent,
+                                                size: 12),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              room['rating'].toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                
+                                // INFO KAMAR (Tanpa Lokasi)
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        room['name'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Serif',
+                                            color: Colors.white),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '\$${room['price']}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppTheme.goldAccent),
+                                          ),
+                                          const Text(
+                                            ' /night',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: AppTheme.textGray),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          title: Text(_foundRooms[index]['name'], 
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Serif')),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(_foundRooms[index]['location'], style: const TextStyle(color: AppTheme.textGray, fontSize: 12)),
-                              const SizedBox(height: 4),
-                              Text('\$${_foundRooms[index]['price']} /night', 
-                                  style: const TextStyle(color: AppTheme.goldAccent, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     )
                   : const Center(
                       child: Text(

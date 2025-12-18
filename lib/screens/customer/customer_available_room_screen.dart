@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import 'customer_room_detail_screen.dart'; 
 
 class CustomerAvailableRoomsScreen extends StatelessWidget {
   const CustomerAvailableRoomsScreen({super.key});
@@ -7,9 +8,11 @@ class CustomerAvailableRoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.darkBackground,
       body: SafeArea(
         child: Column(
           children: [
+            // --- HEADER ---
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Row(
@@ -17,30 +20,42 @@ class CustomerAvailableRoomsScreen extends StatelessWidget {
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    style: IconButton.styleFrom(backgroundColor: AppTheme.cardBackground),
+                    style: IconButton.styleFrom(
+                        backgroundColor: AppTheme.cardBackground),
                   ),
                   const SizedBox(width: 16),
                   const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Available Rooms', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
-                        Text('Dec 16 - Dec 18 · 3 guests', style: TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                        Text('Available Rooms',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Serif', 
+                                color: Colors.white)),
+                        Text('Dec 16 - Dec 18 · 3 guests',
+                            style: TextStyle(
+                                fontSize: 14, color: AppTheme.textGray)),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
+
+            // --- FILTER CHIPS ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _FilterChip(label: 'Filters', icon: Icons.tune, onTap: () {}),
+                    _FilterChip(
+                        label: 'Filters', icon: Icons.tune, onTap: () {}),
                     const SizedBox(width: 8),
-                    _FilterChip(label: 'All', isSelected: true, onTap: () {}),
+                    _FilterChip(
+                        label: 'All', isSelected: true, onTap: () {}),
                     const SizedBox(width: 8),
                     _FilterChip(label: '\$300-\$500', onTap: () {}),
                     const SizedBox(width: 8),
@@ -52,43 +67,70 @@ class CustomerAvailableRoomsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+
+            // --- RESULT COUNT ---
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('4 rooms available for 2 nights', style: TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                child: Text('4 rooms available for 2 nights',
+                    style: TextStyle(fontSize: 14, color: AppTheme.textGray)),
               ),
             ),
             const SizedBox(height: 16),
+
+            // --- ROOM LIST ---
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 children: const [
-                  _AvailableRoomCard(name: 'Executive Suite', beds: 2, sqm: 65, guests: 3, price: 650, rating: 4.8),
+                  // --- PERUBAHAN DI SINI (Executive Suite -> Deluxe Room) ---
+                  _AvailableRoomCard(
+                    name: 'Deluxe Room', // Nama diubah
+                    beds: 2,
+                    sqm: 65,
+                    guests: 3,
+                    price: 450, // Harga diubah jadi 450
+                    rating: 4.8,
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop',
+                  ),
                   SizedBox(height: 16),
-                  _AvailableRoomCard(name: 'Royal Suite', beds: 2, sqm: 85, guests: 4, price: 850, rating: 4.9),
+                  _AvailableRoomCard(
+                    name: 'Royal Suite',
+                    beds: 2,
+                    sqm: 85,
+                    guests: 4,
+                    price: 850,
+                    rating: 4.9,
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop',
+                  ),
+                  SizedBox(height: 16),
+                  _AvailableRoomCard(
+                    name: 'Ocean View',
+                    beds: 1,
+                    sqm: 45,
+                    guests: 2,
+                    price: 450,
+                    rating: 4.7,
+                    imageUrl:
+                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop',
+                  ),
+                  SizedBox(height: 24), 
                 ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        backgroundColor: AppTheme.cardBackground,
-        selectedItemColor: AppTheme.goldAccent,
-        unselectedItemColor: AppTheme.textGray,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_outline), label: 'Saved'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
     );
   }
 }
+
+// ==========================================
+// WIDGETS
+// ==========================================
 
 class _FilterChip extends StatelessWidget {
   final String label;
@@ -96,7 +138,11 @@ class _FilterChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _FilterChip({required this.label, this.icon, this.isSelected = false, required this.onTap});
+  const _FilterChip(
+      {required this.label,
+      this.icon,
+      this.isSelected = false,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -108,15 +154,22 @@ class _FilterChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.goldAccent : AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? AppTheme.goldAccent : AppTheme.borderColor),
+          border: Border.all(
+              color: isSelected ? AppTheme.goldAccent : AppTheme.borderColor),
         ),
         child: Row(
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16, color: isSelected ? Colors.black : Colors.white),
+              Icon(icon,
+                  size: 16, 
+                  color: isSelected ? Colors.black : Colors.white), 
               const SizedBox(width: 6),
             ],
-            Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isSelected ? Colors.black : Colors.white)),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.black : Colors.white)),
           ],
         ),
       ),
@@ -131,6 +184,7 @@ class _AvailableRoomCard extends StatelessWidget {
   final int guests;
   final int price;
   final double rating;
+  final String imageUrl; 
 
   const _AvailableRoomCard({
     required this.name,
@@ -139,6 +193,7 @@ class _AvailableRoomCard extends StatelessWidget {
     required this.guests,
     required this.price,
     required this.rating,
+    required this.imageUrl,
   });
 
   @override
@@ -152,64 +207,100 @@ class _AvailableRoomCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // --- GAMBAR KAMAR ---
           Stack(
             children: [
               Container(
                 height: 200,
-                decoration: const BoxDecoration(
-                  color: AppTheme.emeraldGreen,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl), 
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
+              // Rating Badge
               Positioned(
                 top: 12,
                 left: 12,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: Colors.black.withOpacity(0.6), borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(8)),
                   child: Row(
                     children: [
-                      const Icon(Icons.star, color: AppTheme.goldAccent, size: 14),
+                      const Icon(Icons.star,
+                          color: AppTheme.goldAccent, size: 14),
                       const SizedBox(width: 4),
-                      Text(rating.toString(), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(rating.toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
               ),
+              // Favorite Button
               Positioned(
                 top: 12,
                 right: 12,
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: Colors.black.withOpacity(0.6), shape: BoxShape.circle),
-                  child: const Icon(Icons.favorite_outline, color: Colors.white, size: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      shape: BoxShape.circle),
+                  child: const Icon(Icons.favorite_outline,
+                      color: Colors.white, size: 20),
                 ),
               ),
             ],
           ),
+
+          // --- INFO KAMAR ---
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(name,
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Serif', 
+                        color: Colors.white)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     const Icon(Icons.bed, color: AppTheme.textGray, size: 16),
                     const SizedBox(width: 4),
-                    Text('$beds beds', style: const TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                    Text('$beds beds',
+                        style:
+                            const TextStyle(fontSize: 14, color: AppTheme.textGray)),
                     const SizedBox(width: 16),
-                    const Icon(Icons.straighten, color: AppTheme.textGray, size: 16),
+                    const Icon(Icons.straighten,
+                        color: AppTheme.textGray, size: 16),
                     const SizedBox(width: 4),
-                    Text('$sqm m²', style: const TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                    Text('$sqm m²',
+                        style:
+                            const TextStyle(fontSize: 14, color: AppTheme.textGray)),
                     const SizedBox(width: 16),
-                    const Icon(Icons.people, color: AppTheme.textGray, size: 16),
+                    const Icon(Icons.people,
+                        color: AppTheme.textGray, size: 16),
                     const SizedBox(width: 4),
-                    Text('Up to $guests', style: const TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                    Text('Up to $guests',
+                        style:
+                            const TextStyle(fontSize: 14, color: AppTheme.textGray)),
                   ],
                 ),
                 const SizedBox(height: 16),
+                
+                // Price & Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -218,22 +309,38 @@ class _AvailableRoomCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Text('\$$price', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-                            const Text('/night', style: TextStyle(fontSize: 14, color: AppTheme.textGray)),
+                            Text('\$$price',
+                                style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            const Text('/night',
+                                style: TextStyle(
+                                    fontSize: 14, color: AppTheme.textGray)),
                           ],
                         ),
-                        Text('\$${price * 2} total', style: const TextStyle(fontSize: 12, color: AppTheme.textGray)),
+                        Text('\$${price * 2} total',
+                            style: const TextStyle(
+                                fontSize: 12, color: AppTheme.textGray)),
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CustomerRoomDetailScreen()),
+                          );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.goldAccent,
                         foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('View Details', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: const Text('View Details',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
