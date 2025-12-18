@@ -3,7 +3,10 @@ import '../../theme/app_theme.dart';
 import 'customer_booking_screen.dart';
 import 'customer_search_screen.dart';
 import 'customer_room_detail_screen.dart';
-import 'customer_facilities_screen.dart'; // <--- Tambahan dari kode temanmu
+import 'customer_facilities_screen.dart';
+import 'customer_saved_rooms_screen.dart';
+import 'customer_profile_screen.dart';
+import 'customer_reviews_screen.dart'; // <--- 1. TAMBAHKAN IMPORT INI
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -20,20 +23,29 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Kita gunakan struktur _pages agar Bottom Navbar tetap muncul (Logic Kodemu)
     _pages = [
       // Index 0: Home Content
-      _HomeContent(onSearchTap: () {
-        setState(() {
-          _selectedIndex = 1; // Pindah ke tab Search saat search bar diklik
-        });
-      }),
+      _HomeContent(
+        onSearchTap: () {
+          setState(() {
+            _selectedIndex = 1;
+          });
+        },
+        onSavedTap: () {
+          setState(() {
+            _selectedIndex = 2;
+          });
+        },
+      ),
+      
       // Index 1: Search Screen
       const CustomerSearchScreen(),
-      // Index 2: Saved (Placeholder)
-      const Center(child: Text("Saved Page", style: TextStyle(color: Colors.white))),
-      // Index 3: Profile (Placeholder)
-      const Center(child: Text("Profile Page", style: TextStyle(color: Colors.white))),
+      
+      // Index 2: Saved Screen
+      const CustomerSavedRoomsScreen(),
+      
+      // Index 3: Profile Screen
+      const CustomerProfileScreen(), 
     ];
   }
 
@@ -41,9 +53,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.darkBackground,
-      // Body dinamis sesuai tab
-      body: _pages[_selectedIndex],
-      
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: AppTheme.cardBackground,
@@ -71,12 +84,16 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 }
 
 // ---------------------------------------------------------------------------
-// WIDGET KONTEN HOME (Gabungan Fitur)
+// WIDGET KONTEN HOME
 // ---------------------------------------------------------------------------
 class _HomeContent extends StatelessWidget {
   final VoidCallback onSearchTap;
+  final VoidCallback onSavedTap;
 
-  const _HomeContent({required this.onSearchTap});
+  const _HomeContent({
+    required this.onSearchTap,
+    required this.onSavedTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +104,7 @@ class _HomeContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- HEADER (Style Kodemu) ---
+              // --- HEADER ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -138,7 +155,7 @@ class _HomeContent extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // --- SEARCH BAR (Logic Kodemu) ---
+              // --- SEARCH BAR ---
               GestureDetector(
                 onTap: onSearchTap,
                 child: Container(
@@ -164,7 +181,7 @@ class _HomeContent extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // --- MAIN BANNER (Visual Kodemu) ---
+              // --- MAIN BANNER ---
               Stack(
                 children: [
                   Container(
@@ -236,7 +253,6 @@ class _HomeContent extends StatelessWidget {
                     child: _QuickActionCard(
                       icon: Icons.calendar_today,
                       label: 'Book',
-                      // Logic Temanmu: Buka Booking Screen
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -248,7 +264,6 @@ class _HomeContent extends StatelessWidget {
                       child: _QuickActionCard(
                           icon: Icons.spa, 
                           label: 'Facilities', 
-                          // --- GABUNGAN: Logic Temanmu (Buka Facilities Screen) ---
                           onTap: () => Navigator.push(
                             context, 
                             MaterialPageRoute(builder: (_) => const CustomerFacilitiesScreen())
@@ -258,17 +273,25 @@ class _HomeContent extends StatelessWidget {
                   Expanded(
                       child: _QuickActionCard(
                           icon: Icons.favorite_border,
-                          label: 'Saved', onTap: () {})),
+                          label: 'Saved', 
+                          onTap: onSavedTap)),
                   const SizedBox(width: 12),
+                  
+                  // --- [UPDATE] TOMBOL REVIEWS BERFUNGSI ---
                   Expanded(
                       child: _QuickActionCard(
                           icon: Icons.star_border,
-                          label: 'Reviews', onTap: () {})),
+                          label: 'Reviews', 
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const CustomerReviewsScreen())
+                          ),
+                      )),
                 ],
               ),
               const SizedBox(height: 32),
 
-              // --- FEATURED ROOMS (Visual & Logic Kodemu) ---
+              // --- FEATURED ROOMS ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -380,7 +403,6 @@ class _RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Logic Kodemu: Buka CustomerRoomDetailScreen
     return GestureDetector(
       onTap: () {
         Navigator.push(
