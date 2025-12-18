@@ -1,7 +1,4 @@
 <div align="center">
-
-  <img src="https://raw.githubusercontent.com/Xyroine/MobileProgrammingKelompok1/main/assets/logo_eclat.png" width="120" alt="Èclat Logo" />
-
   # 🏨 <img src="https://git.io/typing-svg?font=Playfair+Display&weight=600&size=35&pause=1000&color=D4AF37&center=true&vCenter=true&width=435&lines=ÈCLAT+HOTEL;Brilliance+in+Every+Stay" alt="Typing SVG" />
 
   <p align="center">
