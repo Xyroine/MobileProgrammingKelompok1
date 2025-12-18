@@ -45,7 +45,7 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
           StaffDashboardContent(onNavigate: _navigateFromDashboard),
           const RoomManagementScreen(),
           const BookingScreen(),
-          const ProfileContent(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -108,7 +108,7 @@ class StaffDashboardContent extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Admin Panel',
+                      'Admin 01',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -144,7 +144,7 @@ class StaffDashboardContent extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Friday, December 13, 2024',
+              'Friday, December 19, 2025',
               style: TextStyle(fontSize: 12, color: AppTheme.textGray),
             ),
             const SizedBox(height: 24),

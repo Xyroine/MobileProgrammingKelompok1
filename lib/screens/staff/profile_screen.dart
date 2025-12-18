@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart'; // Pastikan path ini benar
+import '../../theme/app_theme.dart';
+import 'staff_main_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -7,14 +8,19 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground, // Menggunakan AppTheme
+      backgroundColor: AppTheme.darkBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const StaffMainScreen()),
+              );
+            },
             child: const CircleAvatar(
               backgroundColor: AppTheme.cardBackground,
               child: Icon(Icons.arrow_back, color: Colors.white, size: 20),
@@ -23,11 +29,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         title: const Text(
           'Staff Profile',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'serif',
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'serif'),
         ),
       ),
       body: SingleChildScrollView(
@@ -35,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Card
+            // --- SECTION 1: HEADER ---
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -48,52 +50,32 @@ class ProfileScreen extends StatelessWidget {
                   const CircleAvatar(
                     radius: 40,
                     backgroundColor: AppTheme.emeraldGreen,
-                    child: Text(
-                      'JD',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'serif',
-                      ),
-                    ),
+                    child: Text('JD', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(width: 20),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'John Doe',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'serif',
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('John Doe', style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold)),
+                        const Text('Hotel Manager', style: TextStyle(color: AppTheme.goldAccent, fontSize: 16)),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            _buildBadge('Admin', AppTheme.emeraldGreen.withOpacity(0.2), AppTheme.emeraldLight),
+                            const SizedBox(width: 8),
+                            _buildBadge('Active', AppTheme.goldAccent.withOpacity(0.1), AppTheme.goldAccent),
+                          ],
                         ),
-                      ),
-                      Text(
-                        'Hotel Manager',
-                        style: TextStyle(color: AppTheme.goldAccent, fontSize: 16),
-                      ),
-                      SizedBox(height: 10),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
-            // Badges dipisah agar rapi
-            Row(
-              children: [
-                const SizedBox(width: 100), // Penyesuaian posisi agar sejajar teks
-                _buildBadge('Admin', AppTheme.emeraldGreen.withOpacity(0.2), AppTheme.emeraldLight),
-                const SizedBox(width: 8),
-                _buildBadge('Active', AppTheme.goldAccent.withOpacity(0.1), AppTheme.goldAccent),
-              ],
-            ),
             const SizedBox(height: 20),
 
-            // Statistics Row
+            // --- SECTION 2: STATISTICS ---
             Row(
               children: [
                 Expanded(child: _buildStatCard('156', 'Bookings Handled', AppTheme.goldAccent)),
@@ -105,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Contact Info
+            // --- SECTION 3: CONTACT INFO ---
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -115,7 +97,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildContactItem(Icons.email_outlined, 'Email', 'john.doe@luxuryhotel.com'),
+                  _buildContactItem(Icons.email_outlined, 'Email', 'john.doe@hotel.com'),
                   const Divider(color: AppTheme.borderColor, height: 24),
                   _buildContactItem(Icons.phone_outlined, 'Phone', '+62 812 3456 7890'),
                 ],
@@ -123,36 +105,16 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            const Text(
-              'Settings',
-              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'serif'),
-            ),
+            // --- SECTION 4: SETTINGS ---
+            const Text('Settings', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-
-            // Settings Tile
-            Container(
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.borderColor),
-              ),
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.settings_outlined, color: AppTheme.goldAccent),
-                ),
-                title: const Text('Settings', style: TextStyle(color: Colors.white)),
-                subtitle: const Text('Manage all preferences', style: TextStyle(color: AppTheme.textGray, fontSize: 12)),
-                trailing: const Icon(Icons.chevron_right, color: AppTheme.textGray),
-              ),
-            ),
+            _buildSettingsTile(Icons.person_outline, 'Personal Information', 'Name, email, phone'),
+            _buildSettingsTile(Icons.shield_outlined, 'Security', 'Password, 2FA'),
+            _buildSettingsTile(Icons.notifications_none_outlined, 'Notifications', 'Push, email alerts'),
+            _buildSettingsTile(Icons.dark_mode_outlined, 'Appearance', 'Theme, display'),
+            
             const SizedBox(height: 32),
-
-            // Logout Button
+            // Sign Out Button
             SizedBox(
               width: double.infinity,
               height: 56,
@@ -163,32 +125,19 @@ class ProfileScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFD32F2F),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Center(child: Text('Luxury Hotel Staff App v1.0.0', style: TextStyle(color: AppTheme.textDarkGray, fontSize: 12))),
+            const SizedBox(height: 40),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.darkBackground,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppTheme.goldAccent,
-        unselectedItemColor: AppTheme.textGray,
-        currentIndex: 3,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.bed_outlined), label: 'Rooms'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
       ),
     );
   }
 
-  // Helper Widgets
+  // --- HELPER METHODS (Harus di dalam class ProfileScreen) ---
+
   Widget _buildBadge(String text, Color bgColor, Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -199,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildStatCard(String value, String label, Color vColor) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16),
@@ -207,9 +156,9 @@ class ProfileScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(value, style: TextStyle(color: vColor, fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'serif')),
-          const SizedBox(height: 4),
-          Text(label, textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.textGray, fontSize: 12)),
+          Text(value, style: TextStyle(color: vColor, fontSize: 24, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(label, textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.textGray, fontSize: 10)),
         ],
       ),
     );
@@ -230,4 +179,21 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
-}
+
+  Widget _buildSettingsTile(IconData icon, String title, String subtitle) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.borderColor),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: AppTheme.goldAccent),
+        title: Text(title, style: const TextStyle(color: Colors.white)),
+        subtitle: Text(subtitle, style: const TextStyle(color: AppTheme.textDarkGray, fontSize: 12)),
+        trailing: const Icon(Icons.chevron_right, color: AppTheme.textGray),
+      ),
+    );
+  }
+} // AKHIR DARI KELAS PROFIL
