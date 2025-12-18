@@ -33,6 +33,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+<<<<<<< HEAD
+=======
+              // 1. Total Revenue Card (Green Card)
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
@@ -73,6 +77,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
               ),
               const SizedBox(height: 20),
 
+<<<<<<< HEAD
+=======
+              // 2. Stats Row (Guests, Occupancy, Rating)
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
               Row(
                 children: [
                   _miniStatCard(Icons.people_outline, '1,248', 'Guests', '+12%', true),
@@ -84,6 +92,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
               ),
               const SizedBox(height: 30),
 
+<<<<<<< HEAD
+=======
+              // 3. Weekly Occupancy Chart Placeholder
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
               const Text('Weekly Occupancy', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               Container(
@@ -100,6 +112,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
               ),
               const SizedBox(height: 30),
 
+<<<<<<< HEAD
+=======
+              // 4. Room Performance List
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
               const Text('Room Performance', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               _roomPerformanceItem('Royal Suite', '45 bookings this month', '\$38,250', '+8%', true),
@@ -127,6 +143,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  // Widget untuk Card kecil di baris kedua
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
   Widget _miniStatCard(IconData icon, String value, String label, String trend, bool isPositive) {
     return Expanded(
       child: Container(
@@ -150,6 +170,10 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  // Widget untuk list performa kamar
+>>>>>>> 358410b362ac3389995cfaccf7d31f4d1e9396b9
   Widget _roomPerformanceItem(String title, String subtitle, String price, String trend, bool isPositive) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
