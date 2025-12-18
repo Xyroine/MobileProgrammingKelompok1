@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'customer_booking_screen.dart';
 import 'customer_search_screen.dart';
-import 'customer_room_detail_screen.dart';
 import 'customer_facilities_screen.dart';
 import 'customer_saved_rooms_screen.dart';
 import 'customer_profile_screen.dart';
-import 'customer_reviews_screen.dart'; // <--- 1. TAMBAHKAN IMPORT INI
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -277,15 +275,19 @@ class _HomeContent extends StatelessWidget {
                           onTap: onSavedTap)),
                   const SizedBox(width: 12),
                   
-                  // --- [UPDATE] TOMBOL REVIEWS BERFUNGSI ---
+                  // Reviews Button - Disabled untuk sekarang
                   Expanded(
                       child: _QuickActionCard(
                           icon: Icons.star_border,
                           label: 'Reviews', 
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const CustomerReviewsScreen())
-                          ),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Reviews feature coming soon!'),
+                                backgroundColor: AppTheme.goldAccent,
+                              ),
+                            );
+                          },
                       )),
                 ],
               ),
@@ -405,9 +407,13 @@ class _RoomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const CustomerRoomDetailScreen()),
+        // Show snackbar karena klik dari home belum ada data booking
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please use Book feature to view room details'),
+            backgroundColor: AppTheme.goldAccent,
+            duration: Duration(seconds: 2),
+          ),
         );
       },
       child: Container(

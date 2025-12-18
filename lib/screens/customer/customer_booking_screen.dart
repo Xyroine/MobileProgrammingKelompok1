@@ -21,7 +21,7 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
     final nights = _checkOutDate.difference(_checkInDate).inDays;
 
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground, // Pastikan background sesuai tema
+      backgroundColor: AppTheme.darkBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -220,13 +220,13 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 100), // Spasi bawah agar tidak tertutup tombol
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
 
-            // --- BOTTOM BUTTON ---
+            // --- BOTTOM BUTTON (KIRIM DATA KE AVAILABLE ROOMS) ---
             Container(
               padding: const EdgeInsets.all(24),
               decoration: const BoxDecoration(
@@ -240,8 +240,11 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) =>
-                              const CustomerAvailableRoomsScreen())),
+                          builder: (_) => CustomerAvailableRoomsScreen(
+                                checkInDate: _checkInDate,
+                                checkOutDate: _checkOutDate,
+                                guests: _guests,
+                              ))),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.goldAccent,
                     foregroundColor: Colors.black,
@@ -264,13 +267,12 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: ... (SUDAH DIHAPUS)
     );
   }
 }
 
 // ==========================================
-// WIDGETS PENDUKUNG (TIDAK PERLU DIUBAH)
+// WIDGETS PENDUKUNG
 // ==========================================
 
 class _DateCard extends StatelessWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import 'customer_room_detail_screen.dart'; // Import ini agar bisa di-klik ke detail
 
 class CustomerSearchScreen extends StatefulWidget {
   const CustomerSearchScreen({super.key});
@@ -114,20 +113,23 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                   ? GridView.builder(
                       itemCount: _foundRooms.length,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // 2 Kolom
-                        crossAxisSpacing: 16, // Jarak horizontal antar card
-                        mainAxisSpacing: 16, // Jarak vertikal antar card
-                        childAspectRatio: 0.75, // Rasio lebar:tinggi card (agar memanjang ke bawah)
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.75,
                       ),
                       itemBuilder: (context, index) {
                         final room = _foundRooms[index];
                         return GestureDetector(
                           onTap: () {
-                             // Navigasi ke Detail jika diklik
-                             Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const CustomerRoomDetailScreen()),
-                              );
+                            // Show info snackbar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please use Book feature to select dates and view room details'),
+                                backgroundColor: AppTheme.goldAccent,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -150,7 +152,6 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    // Rating Overlay di pojok gambar
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: Container(
@@ -182,7 +183,7 @@ class _CustomerSearchScreenState extends State<CustomerSearchScreen> {
                                   ),
                                 ),
                                 
-                                // INFO KAMAR (Tanpa Lokasi)
+                                // INFO KAMAR
                                 Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
