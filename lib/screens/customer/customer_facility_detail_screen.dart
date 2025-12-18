@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
-import 'customer_facilities_screen.dart';
+import '../../theme/app_theme.dart'; // Sesuaikan path ini dengan project Anda
+import 'customer_facilities_screen.dart'; // Import ini PENTING untuk membaca FacilityModel
 
 class CustomerFacilityDetailScreen extends StatelessWidget {
   final FacilityModel facility;
@@ -18,13 +18,34 @@ class CustomerFacilityDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Hero Image with Back Button
+                    // Hero Image
                     Stack(
                       children: [
+                        SizedBox(
+                          height: 300,
+                          width: double.infinity,
+                          child: Image.network(
+                            facility.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: facility.imageColor.withOpacity(0.3),
+                              child: const Center(child: Icon(Icons.broken_image, color: AppTheme.textGray)),
+                            ),
+                          ),
+                        ),
+                        // Gradient Overlay
                         Container(
                           height: 300,
                           decoration: BoxDecoration(
-                            color: facility.imageColor.withOpacity(0.3),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.6),
+                                Colors.transparent,
+                              ],
+                              stops: const [0.0, 0.3],
+                            )
                           ),
                         ),
                         Positioned(
@@ -41,7 +62,7 @@ class CustomerFacilityDetailScreen extends StatelessWidget {
                       ],
                     ),
 
-                    // Content
+                    // Content Details
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
@@ -169,57 +190,6 @@ class CustomerFacilityDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 24),
-
-                          // Operating Hours Card
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: AppTheme.cardBackground,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: AppTheme.borderColor),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.goldAccent.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.access_time,
-                                    color: AppTheme.goldAccent,
-                                    size: 24,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Operating Hours',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        facility.hours,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: AppTheme.textGray,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                           const SizedBox(height: 100),
                         ],
                       ),
@@ -241,7 +211,6 @@ class CustomerFacilityDetailScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Show success dialog
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(

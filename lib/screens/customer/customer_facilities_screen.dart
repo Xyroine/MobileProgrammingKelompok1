@@ -1,6 +1,33 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
+import '../../theme/app_theme.dart'; // Sesuaikan path ini dengan project Anda
 import 'customer_facility_detail_screen.dart';
+
+// ==================== MODEL ====================
+class FacilityModel {
+  final IconData icon;
+  final Color iconColor;
+  final String name;
+  final String description;
+  final String hours;
+  final String location;
+  final Color imageColor;
+  final List<String> features;
+  final String imageUrl; 
+
+  FacilityModel({
+    required this.icon,
+    required this.iconColor,
+    required this.name,
+    required this.description,
+    required this.hours,
+    required this.location,
+    required this.imageColor,
+    required this.features,
+    required this.imageUrl,
+  });
+}
+
+// ==================== SCREEN ====================
 
 class CustomerFacilitiesScreen extends StatelessWidget {
   const CustomerFacilitiesScreen({super.key});
@@ -38,14 +65,15 @@ class CustomerFacilitiesScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 children: [
+                  // 1. Infinity Pool
                   _FacilityCard(
                     icon: Icons.water_drop,
                     iconColor: AppTheme.emeraldGreen,
                     name: 'Infinity Pool',
-                    description: 'Dive into luxury with our stunning rooftop infinity pool overlooking the city skyline. Features heated water...',
+                    description: 'Dive into luxury with our stunning rooftop infinity pool overlooking the city skyline.',
                     hours: '24 Hours',
                     location: 'Rooftop, Floor 25',
-                    imageColor: AppTheme.emeraldGreen,
+                    imageUrl: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=800&auto=format&fit=crop',
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -59,20 +87,23 @@ class CustomerFacilitiesScreen extends StatelessWidget {
                             location: 'Rooftop, Floor 25',
                             imageColor: AppTheme.emeraldGreen,
                             features: ['Heated Pool', 'Poolside Bar', 'Cabanas', 'Towel Service', 'Kids Section'],
+                            imageUrl: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=800&auto=format&fit=crop',
                           ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+                  
+                  // 2. Fitness Center
                   _FacilityCard(
                     icon: Icons.fitness_center,
                     iconColor: AppTheme.goldAccent,
                     name: 'Fitness Center',
-                    description: 'State-of-the-art gym equipment with personal trainers available. Open 24/7 for your convenience...',
+                    description: 'State-of-the-art gym equipment with personal trainers available. Open 24/7.',
                     hours: '24 Hours',
                     location: 'Floor 3',
-                    imageColor: AppTheme.goldAccent,
+                    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop',
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -86,20 +117,24 @@ class CustomerFacilitiesScreen extends StatelessWidget {
                             location: 'Floor 3',
                             imageColor: AppTheme.goldAccent,
                             features: ['Cardio Equipment', 'Free Weights', 'Personal Trainer', 'Yoga Studio', 'Locker Room'],
+                            imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop',
                           ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // 3. Luxury Spa (LINK SUDAH DIPERBAIKI)
                   _FacilityCard(
                     icon: Icons.spa,
                     iconColor: const Color(0xFFE91E63),
                     name: 'Luxury Spa',
-                    description: 'Relax and rejuvenate with our premium spa services. Professional therapists and tranquil atmosphere...',
+                    description: 'Relax and rejuvenate with our premium spa services. Professional therapists.',
                     hours: '9:00 AM - 9:00 PM',
                     location: 'Floor 2',
-                    imageColor: const Color(0xFFE91E63),
+                    // URL BARU
+                    imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop',
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -113,20 +148,24 @@ class CustomerFacilitiesScreen extends StatelessWidget {
                             location: 'Floor 2',
                             imageColor: const Color(0xFFE91E63),
                             features: ['Massage Therapy', 'Sauna', 'Steam Room', 'Jacuzzi', 'Beauty Treatments'],
+                            // URL BARU
+                            imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop',
                           ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // 4. Fine Dining
                   _FacilityCard(
                     icon: Icons.restaurant,
                     iconColor: const Color(0xFFFF9800),
-                    name: 'Fine Dining Restaurant',
-                    description: 'Experience world-class cuisine prepared by our award-winning chefs. International and local dishes...',
+                    name: 'Fine Dining',
+                    description: 'Experience world-class cuisine prepared by our award-winning chefs.',
                     hours: '6:00 AM - 11:00 PM',
                     location: 'Floor 1',
-                    imageColor: const Color(0xFFFF9800),
+                    imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop',
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -140,6 +179,7 @@ class CustomerFacilitiesScreen extends StatelessWidget {
                             location: 'Floor 1',
                             imageColor: const Color(0xFFFF9800),
                             features: ['Breakfast Buffet', 'A la Carte Menu', 'Private Dining', 'Wine Selection', 'Outdoor Seating'],
+                            imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop',
                           ),
                         ),
                       ),
@@ -152,24 +192,6 @@ class CustomerFacilitiesScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-          }
-        },
-        backgroundColor: AppTheme.cardBackground,
-        selectedItemColor: AppTheme.goldAccent,
-        unselectedItemColor: AppTheme.textGray,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_outline), label: 'Saved'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
     );
   }
 }
@@ -181,7 +203,7 @@ class _FacilityCard extends StatelessWidget {
   final String description;
   final String hours;
   final String location;
-  final Color imageColor;
+  final String imageUrl;
   final VoidCallback onTap;
 
   const _FacilityCard({
@@ -191,7 +213,7 @@ class _FacilityCard extends StatelessWidget {
     required this.description,
     required this.hours,
     required this.location,
-    required this.imageColor,
+    required this.imageUrl,
     required this.onTap,
   });
 
@@ -209,16 +231,38 @@ class _FacilityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
             Stack(
               children: [
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: imageColor.withOpacity(0.3),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  child: Image.network(
+                    imageUrl,
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 200,
+                        color: AppTheme.cardBackground,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: iconColor,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
+                       height: 200,
+                       color: iconColor.withOpacity(0.3),
+                       child: const Center(child: Icon(Icons.broken_image, color: AppTheme.textGray)),
                     ),
                   ),
                 ),
@@ -236,8 +280,6 @@ class _FacilityCard extends StatelessWidget {
                 ),
               ],
             ),
-
-            // Content
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -296,27 +338,4 @@ class _FacilityCard extends StatelessWidget {
       ),
     );
   }
-}
-
-// Model class untuk facility data
-class FacilityModel {
-  final IconData icon;
-  final Color iconColor;
-  final String name;
-  final String description;
-  final String hours;
-  final String location;
-  final Color imageColor;
-  final List<String> features;
-
-  FacilityModel({
-    required this.icon,
-    required this.iconColor,
-    required this.name,
-    required this.description,
-    required this.hours,
-    required this.location,
-    required this.imageColor,
-    required this.features,
-  });
 }
