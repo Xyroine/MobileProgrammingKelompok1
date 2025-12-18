@@ -129,7 +129,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                     icon: const Icon(Icons.add, size: 20),
                     label: const Text('Add'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 12,
@@ -171,7 +171,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                     child: _buildStatusCard(
                       count: _occupiedCount,
                       label: 'Occupied',
-                      color: AppTheme.emeraldGreen,
+                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -211,9 +211,6 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           ],
         ),
       ),
-
-      // Bottom Navigation Bar
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -233,7 +230,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.black : AppTheme.textGray,
+            color: isSelected ? Colors.yellow : AppTheme.textGray,
           ),
         ),
       ),
@@ -400,60 +397,6 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        border: Border(
-          top: BorderSide(color: AppTheme.borderColor, width: 1),
-        ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.dashboard_outlined, 'Dashboard', false),
-              _buildNavItem(Icons.hotel_outlined, 'Rooms', true),
-              _buildNavItem(Icons.event_note_outlined, 'Bookings', false),
-              _buildNavItem(Icons.person_outline, 'Profile', false),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 26,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-        if (isActive)
-          Container(
-            margin: const EdgeInsets.only(top: 4),
-            height: 3,
-            width: 24,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-      ],
     );
   }
 }

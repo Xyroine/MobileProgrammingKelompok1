@@ -11,6 +11,13 @@ class AppTheme {
   static const Color textGray = Color(0xFF9CA3AF);
   static const Color textDarkGray = Color(0xFF6B7280);
 
+  static const TextStyle titleStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'serif', // Gunakan font serif sesuai desain
+    fontSize: 20,
+  );
+  
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
