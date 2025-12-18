@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import 'staff_main_screen.dart';
 
 enum RoomStatus { occupied, available, maintenance }
 
@@ -101,47 +102,47 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    style: IconButton.styleFrom(
-                      backgroundColor: AppTheme.cardBackground,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Expanded(
-                    child: Text(
-                      'Room Management',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Navigate to add room screen
-                    },
-                    icon: const Icon(Icons.add, size: 20),
-                    label: const Text('Add'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+  padding: const EdgeInsets.all(16.0),
+  child: Row(
+    children: [
+      IconButton(
+        // Perubahan di sini: Navigasi ke staff_main_screen.dart
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const StaffMainScreen()),
+          );
+        },
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        style: IconButton.styleFrom(
+          backgroundColor: AppTheme.cardBackground,
+        ),
+      ),
+      const SizedBox(width: 16),
+      const Expanded(
+        child: Text(
+          'Room Management',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      // Tombol Add tetap sama
+      ElevatedButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.add, size: 20),
+        label: const Text('Add'),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    ],
+  ),
+),
 
             // Filter Chips
             SingleChildScrollView(
@@ -223,8 +224,10 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-          ),
-        ),
+            color: isSelected ? Colors.yellow : Colors.white,
+            width: 1.5,
+          ), // Penutup Border.all
+        ), // Penutup BoxDecoration
         child: Text(
           label,
           style: TextStyle(
