@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'customer_booking_screen.dart';
+import 'customer_facilities_screen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -11,6 +12,20 @@ class CustomerHomeScreen extends StatefulWidget {
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 0;
+
+  // Method untuk handle navigation
+  void _onNavigationTap(int index) {
+    if (index == 1) {
+      // Index 1 = Search/Booking
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CustomerBookingScreen()),
+      );
+    } else {
+      setState(() => _selectedIndex = index);
+      // Untuk index lain, Anda bisa tambahkan navigasi ke screen lain
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +140,13 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: _QuickActionCard(icon: Icons.water_drop, label: 'Facilities', onTap: () {})),
+                    Expanded(
+                      child: _QuickActionCard(
+                        icon: Icons.water_drop,
+                        label: 'Facilities',
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CustomerFacilitiesScreen())),
+                      ),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(child: _QuickActionCard(icon: Icons.favorite_outline, label: 'Saved', onTap: () {})),
                     const SizedBox(width: 12),
@@ -168,7 +189,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: _onNavigationTap, // Gunakan method baru
         backgroundColor: AppTheme.cardBackground,
         selectedItemColor: AppTheme.goldAccent,
         unselectedItemColor: AppTheme.textGray,

@@ -16,6 +16,21 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
   bool _showCalendar = false;
   bool _isSelectingCheckIn = true;
 
+  // Method untuk handle navigation
+  void _onNavigationTap(int index) {
+    if (index == 0) {
+      // Index 0 = Home, kembali ke home
+      Navigator.pop(context);
+    } else if (index == 1) {
+      // Index 1 = Search/Booking, sudah di halaman ini
+      // Tidak perlu melakukan apa-apa
+    } else {
+      // Untuk index lain, Anda bisa tambahkan navigasi ke screen lain
+      // Sementara kita pop dulu untuk kembali
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final nights = _checkOutDate.difference(_checkInDate).inDays;
@@ -210,7 +225,8 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
+        currentIndex: 1, // Highlight Search/Booking tab
+        onTap: _onNavigationTap, // Gunakan method navigasi
         backgroundColor: AppTheme.cardBackground,
         selectedItemColor: AppTheme.goldAccent,
         unselectedItemColor: AppTheme.textGray,
@@ -225,8 +241,6 @@ class _CustomerBookingScreenState extends State<CustomerBookingScreen> {
     );
   }
 }
-
-// Tambahkan di bagian bawah customer_booking_screen.dart setelah class _CustomerBookingScreenState
 
 class _DateCard extends StatelessWidget {
   final DateTime date;
@@ -349,7 +363,7 @@ class _CalendarWidget extends StatelessWidget {
                                 : Colors.white,
                         fontWeight: (isCheckIn || isCheckOut || day == 17) ? FontWeight.bold : FontWeight.normal,
                       ),
-                    ),
+                    ), 
                   ),
                 ),
               );
