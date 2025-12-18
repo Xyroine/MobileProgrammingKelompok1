@@ -4,7 +4,7 @@ import 'analytics_screen.dart';
 import 'settings_screen.dart';
 import 'room_screen.dart';
 import 'booking_screen.dart';
-import 'profile_screen.dart';
+import 'profile_screen.dart'; // Import ini sekarang AKTIF dipakai
 
 class StaffMainScreen extends StatefulWidget {
   final int initialIndex;
@@ -45,7 +45,7 @@ class _StaffMainScreenState extends State<StaffMainScreen> {
           StaffDashboardContent(onNavigate: _navigateFromDashboard),
           const RoomManagementScreen(),
           const BookingScreen(),
-          const ProfileContent(),
+          const ProfileScreen(), // <--- SUDAH DIPERBAIKI: Menggunakan Class dari file profile_screen.dart
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -454,40 +454,6 @@ class BookingContent extends StatelessWidget {
             const Center(
               child: Text(
                 'Booking screen content here',
-                style: TextStyle(color: AppTheme.textGray),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ============ PROFILE CONTENT ============
-class ProfileContent extends StatelessWidget {
-  const ProfileContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Staff Profile',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Center(
-              child: Text(
-                'Profile screen content here',
                 style: TextStyle(color: AppTheme.textGray),
               ),
             ),

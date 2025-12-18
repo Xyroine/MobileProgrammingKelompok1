@@ -1,16 +1,54 @@
 import 'package:flutter/material.dart';
+import '../../models/booking_model.dart';
+import '../../models/saved_room_service.dart';
+import 'customer_booking_history_screen.dart';
 
-class CustomerProfileScreen extends StatelessWidget {
+class CustomerProfileScreen extends StatefulWidget {
   const CustomerProfileScreen({super.key});
 
   @override
+  State<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
+}
+
+class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
+  final SavedRoomService _savedService = SavedRoomService();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen untuk perubahan saved rooms
+    _savedService.addListener(_onSavedRoomsChanged);
+  }
+
+  @override
+  void dispose() {
+    // Remove listener saat widget di-dispose
+    _savedService.removeListener(_onSavedRoomsChanged);
+    super.dispose();
+  }
+
+  void _onSavedRoomsChanged() {
+    // Update UI saat saved rooms berubah
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final bookings = BookingService.getAllBookings();
+    final totalBookings = bookings.length;
+    final totalSaved = _savedService.getTotalSavedRooms();
+
+    // Ambil hanya 2 booking teratas
+    final recentBookings = bookings.take(2).toList();
+
     return Scaffold(
-      backgroundColor: Colors.transparent, // Agar menyatu dengan background induk
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // Hilangkan tombol back
+        automaticallyImplyLeading: false,
         title: const Text(
           'Profile',
           style: TextStyle(
@@ -20,19 +58,50 @@ class CustomerProfileScreen extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        // [UPDATE] Bagian actions (icon settings) sudah dihapus
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
             // Header Profile Card
             _buildProfileHeader(),
             const SizedBox(height: 25),
-            // Stats Row
-            _buildStatsRow(),
+            // Stats Row (Updated dengan data real)
+            _buildStatsRow(totalBookings, totalSaved),
             const SizedBox(height: 25),
+
+            // --- BOOKING HISTORY SECTION (Max 2) ---
+            if (totalBookings > 0) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('My Bookings',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Serif',
+                          color: Colors.white)),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CustomerBookingHistoryScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('View All',
+                        style: TextStyle(color: Color(0xFFD4AF37))),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ...recentBookings.map((booking) => _buildBookingCard(booking)),
+              const SizedBox(height: 25),
+            ],
+
             // Menu Items
             _buildMenuItem(Icons.credit_card_outlined, 'Payment Methods',
                 'Manage your cards'),
@@ -45,7 +114,7 @@ class CustomerProfileScreen extends StatelessWidget {
             const SizedBox(height: 30),
             // Sign Out Button
             _buildSignOutButton(),
-            const SizedBox(height: 100), // Spasi bawah agar tidak tertutup navbar utama
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -65,7 +134,7 @@ class CustomerProfileScreen extends StatelessWidget {
             radius: 35,
             backgroundColor: Color(0xFF2D4F3E),
             child: Text(
-              'A', // Inisial Alexander
+              'A',
               style: TextStyle(
                   fontSize: 28,
                   color: Colors.white,
@@ -108,8 +177,8 @@ class CustomerProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Text('750 points',
-                      style: TextStyle(
-                          color: Colors.amber[200], fontSize: 12)),
+                      style:
+                          TextStyle(color: Colors.amber[200], fontSize: 12)),
                 ],
               )
             ],
@@ -119,13 +188,13 @@ class CustomerProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsRow() {
+  Widget _buildStatsRow(int totalBookings, int totalSaved) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildStatItem('0', 'Bookings'),
+        _buildStatItem(totalBookings.toString(), 'Bookings'),
         _buildStatItem('0', 'Reviews'),
-        _buildStatItem('0', 'Saved'),
+        _buildStatItem(totalSaved.toString(), 'Saved'),
       ],
     );
   }
@@ -148,6 +217,84 @@ class CustomerProfileScreen extends StatelessWidget {
           const SizedBox(height: 5),
           Text(label,
               style: const TextStyle(color: Colors.grey, fontSize: 13)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBookingCard(Booking booking) {
+    final dateStr =
+        '${_getMonthShort(booking.checkInDate.month)} ${booking.checkInDate.day} - ${_getMonthShort(booking.checkOutDate.month)} ${booking.checkOutDate.day}';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: const Color(0xFF2A2A2A)),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              booking.imageUrl,
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: 70,
+                height: 70,
+                color: Colors.grey[800],
+                child: const Icon(Icons.hotel, color: Colors.grey),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(booking.roomName,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                const SizedBox(height: 4),
+                Text(dateStr,
+                    style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: booking.status == 'Confirmed'
+                            ? const Color(0xFF2D4F3E)
+                            : Colors.grey[800],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(booking.status,
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: booking.status == 'Confirmed'
+                                  ? const Color(0xFF5FB583)
+                                  : Colors.grey)),
+                    ),
+                    const SizedBox(width: 8),
+                    Text('\$${booking.totalPrice}',
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFD4AF37))),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
         ],
       ),
     );
@@ -177,7 +324,9 @@ class CustomerProfileScreen extends StatelessWidget {
               children: [
                 Text(title,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white)),
                 Text(subtitle,
                     style: const TextStyle(color: Colors.grey, fontSize: 12)),
               ],
@@ -207,5 +356,23 @@ class CustomerProfileScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getMonthShort(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
   }
 }

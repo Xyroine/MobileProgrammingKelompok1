@@ -11,6 +11,8 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        // Tombol back ini opsional. Jika ini adalah tab utama, 
+        // biasanya tidak perlu tombol back. Tapi saya biarkan sesuai kodemu.
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
@@ -172,19 +174,7 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.darkBackground,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppTheme.goldAccent,
-        unselectedItemColor: AppTheme.textGray,
-        currentIndex: 3,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.bed_outlined), label: 'Rooms'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
+      // BAGIAN NAVIGASI SUDAH DIHAPUS DARI SINI
     );
   }
 

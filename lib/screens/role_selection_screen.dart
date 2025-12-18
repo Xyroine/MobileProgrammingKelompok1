@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/hotel_logo.dart';
-import 'login_screen.dart';
-import 'staff/staff_login_screen.dart';
+// Import kedua halaman login yang sudah dipisah
+import '../screens/customer/customer_login_screen.dart';
+import '../screens/staff/staff_login_screen.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -32,6 +33,8 @@ class RoleSelectionScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 14, color: AppTheme.textGray),
               ),
               const SizedBox(height: 40),
+              
+              // --- TUMBOL GUEST ---
               _RoleCard(
                 icon: Icons.person_outline,
                 title: 'Guest',
@@ -41,12 +44,16 @@ class RoleSelectionScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const LoginScreen(isStaff: false),
+                      // ✅ PERBAIKAN: Hapus parameter (isStaff: false)
+                      builder: (_) => const CustomerLoginScreen(),
                     ),
                   );
                 },
               ),
+              
               const SizedBox(height: 16),
+              
+              // --- TOMBOL STAFF ---
               _RoleCard(
                 icon: Icons.shield_outlined,
                 title: 'Staff',
@@ -57,11 +64,13 @@ class RoleSelectionScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      // ✅ Ini sudah benar
                       builder: (_) => const StaffLoginScreen(),
                     ),
                   );
                 },
               ),
+              
               const Spacer(),
               RichText(
                 text: const TextSpan(

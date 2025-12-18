@@ -1,60 +1,47 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import 'customer_room_detail_screen.dart';
+import '../../models/saved_room_service.dart';
 
 class CustomerSavedRoomsScreen extends StatefulWidget {
   const CustomerSavedRoomsScreen({super.key});
 
   @override
-  State<CustomerSavedRoomsScreen> createState() => _CustomerSavedRoomsScreenState();
+  State<CustomerSavedRoomsScreen> createState() =>
+      _CustomerSavedRoomsScreenState();
 }
 
 class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
-  // --- DATA DUMMY ---
-  final List<Map<String, dynamic>> _savedRooms = [
-    {
-      'id': '1',
-      'name': 'Royal Suite',
-      'price': '\$850',
-      'rating': '4.9',
-      'imageUrl': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=2070&auto=format&fit=crop',
-    },
-    {
-      'id': '2',
-      'name': 'Deluxe Room',
-      'price': '\$450',
-      'rating': '4.8',
-      'imageUrl': 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop',
-    },
-    {
-      'id': '3',
-      'name': 'Presidential',
-      'price': '\$1,200',
-      'rating': '5.0',
-      'imageUrl': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop',
-    },
-    {
-      'id': '4',
-      'name': 'Ocean View',
-      'price': '\$600',
-      'rating': '4.7',
-      'imageUrl': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop',
-    },
-    {
-      'id': '5',
-      'name': 'Luxury Garden',
-      'price': '\$550',
-      'rating': '4.6',
-      'imageUrl': 'https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1974&auto=format&fit=crop',
-    },
-  ];
+  final SavedRoomService _savedService = SavedRoomService();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen untuk perubahan saved rooms
+    _savedService.addListener(_onSavedRoomsChanged);
+  }
+
+  @override
+  void dispose() {
+    // Remove listener saat widget di-dispose
+    _savedService.removeListener(_onSavedRoomsChanged);
+    super.dispose();
+  }
+
+  void _onSavedRoomsChanged() {
+    // Update UI saat saved rooms berubah
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final savedRooms = _savedService.getAllSavedRooms();
+
     return Scaffold(
-      backgroundColor: Colors.black, // Background Hitam (Dark Mode)
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Hilangkan tombol back
+        automaticallyImplyLeading: false,
         title: const Text(
           'Saved Rooms',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -63,8 +50,8 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: _savedRooms.isEmpty
-          // 1. TAMPILAN JIKA KOSONG (EMPTY STATE)
+      body: savedRooms.isEmpty
+          // 1. TAMPILAN JIKA KOSONG
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -75,12 +62,16 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                       color: AppTheme.cardBackground,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.favorite_border, size: 40, color: AppTheme.textGray),
+                    child: const Icon(Icons.favorite_border,
+                        size: 40, color: AppTheme.textGray),
                   ),
                   const SizedBox(height: 16),
                   const Text(
                     'No saved rooms yet',
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -90,13 +81,13 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                 ],
               ),
             )
-          // 2. TAMPILAN LIST KAMAR (LIST VIEW)
+          // 2. TAMPILAN LIST KAMAR
           : ListView.builder(
               padding: const EdgeInsets.all(20),
-              itemCount: _savedRooms.length,
+              itemCount: savedRooms.length,
               itemBuilder: (context, index) {
-                final room = _savedRooms[index];
-                
+                final room = savedRooms[index];
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
@@ -106,9 +97,13 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (_) => const CustomerRoomDetailScreen())
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Please use Book feature to select dates and view room details'),
+                          backgroundColor: AppTheme.goldAccent,
+                          duration: Duration(seconds: 2),
+                        ),
                       );
                     },
                     borderRadius: BorderRadius.circular(16),
@@ -121,9 +116,9 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                             bottomLeft: Radius.circular(16),
                           ),
                           child: Image.network(
-                            room['imageUrl'],
+                            room.imageUrl,
                             width: 110,
-                            height: 110, 
+                            height: 110,
                             fit: BoxFit.cover,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
@@ -132,7 +127,9 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                                 height: 110,
                                 color: AppTheme.cardBackground,
                                 child: const Center(
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.goldAccent),
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppTheme.goldAccent),
                                 ),
                               );
                             },
@@ -140,7 +137,8 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                               width: 110,
                               height: 110,
                               color: Colors.grey[800],
-                              child: const Icon(Icons.broken_image, color: Colors.white54),
+                              child: const Icon(Icons.broken_image,
+                                  color: Colors.white54),
                             ),
                           ),
                         ),
@@ -153,9 +151,8 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Nama Kamar
                                 Text(
-                                  room['name'],
+                                  room.name,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -164,19 +161,17 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                
                                 const SizedBox(height: 12),
-
-                                // Harga & Rating
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // BAGIAN HARGA + /night
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          room['price'],
+                                          '\$${room.price}',
                                           style: const TextStyle(
                                             color: AppTheme.goldAccent,
                                             fontWeight: FontWeight.bold,
@@ -192,21 +187,23 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                                         ),
                                       ],
                                     ),
-
-                                    // RATING
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.star, color: Colors.amber, size: 12),
+                                          const Icon(Icons.star,
+                                              color: Colors.amber, size: 12),
                                           const SizedBox(width: 4),
                                           Text(
-                                            room['rating'],
-                                            style: const TextStyle(color: Colors.white, fontSize: 11),
+                                            room.rating.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11),
                                           ),
                                         ],
                                       ),
@@ -218,23 +215,26 @@ class _CustomerSavedRoomsScreenState extends State<CustomerSavedRoomsScreen> {
                           ),
                         ),
 
-                        // TOMBOL HAPUS / LOVE
+                        // TOMBOL HAPUS
                         Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: IconButton(
                             onPressed: () {
-                              setState(() {
-                                _savedRooms.removeAt(index);
-                              });
+                              // Langsung hapus dari service
+                              // Service akan notify semua listener (termasuk Profile)
+                              _savedService.removeRoom(room.id);
+
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   backgroundColor: AppTheme.cardBackground,
-                                  content: const Text("Room removed from saved", style: TextStyle(color: Colors.white)),
-                                  duration: const Duration(milliseconds: 800),
+                                  content: Text("Room removed from saved",
+                                      style: TextStyle(color: Colors.white)),
+                                  duration: Duration(milliseconds: 800),
                                 ),
                               );
                             },
-                            icon: const Icon(Icons.favorite, color: Colors.red),
+                            icon:
+                                const Icon(Icons.favorite, color: Colors.red),
                           ),
                         ),
                       ],
