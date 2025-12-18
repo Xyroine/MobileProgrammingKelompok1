@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import untuk koneksi server
-import 'dart:convert'; // Import untuk mengolah data JSON
+import 'package:http/http.dart' as http; // Import koneksi
+import 'dart:convert'; // Import JSON decoder
 import '../../theme/app_theme.dart';
 import '../../widgets/hotel_logo.dart';
-import 'staff_main_screen.dart'; 
+// ✅ UBAH: Import file yang benar
+import 'customer_home_screen.dart'; 
 
-class StaffLoginScreen extends StatefulWidget {
-  const StaffLoginScreen({super.key});
+class CustomerLoginScreen extends StatefulWidget {
+  const CustomerLoginScreen({super.key});
 
   @override
-  State<StaffLoginScreen> createState() => _StaffLoginScreenState();
+  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
 }
 
-class _StaffLoginScreenState extends State<StaffLoginScreen> {
-  // Variable untuk mengontrol password terlihat/tidak
+class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   bool _obscurePassword = true;
-  
-  // Variable untuk status loading
-  bool _isLoading = false; 
+  bool _isLoading = false; // Status loading
   
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   
   final _formKey = GlobalKey<FormState>();
 
-  // Validasi Email (Khusus Gmail Staff)
-  String? _validateGmailEmail(String? value) {
+  // Validasi Email Customer
+  String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email tidak boleh kosong';
     }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     
-    final gmailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
-    
-    if (!gmailRegex.hasMatch(value)) {
-      return 'Email harus berformat @gmail.com';
+    if (!emailRegex.hasMatch(value)) {
+      return 'Masukkan format email yang valid';
     }
     
     return null;
@@ -46,25 +43,18 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
     return null;
   }
 
-  // --- FUNGSI LOGIN KE SERVER ---
+  // --- FUNGSI LOGIN CUSTOMER ---
   Future<void> _handleLogin() async {
-    // 1. Cek validasi form (format email dll)
-    if (!_formKey.currentState!.validate()) {
-      return; 
-    }
+    if (!_formKey.currentState!.validate()) return;
 
-    // 2. Mulai Loading
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // 3. Tembak ke API (Backend)
-      // PENTING:
-      // - Jika pakai Emulator Android, gunakan IP: 10.0.2.2
-      // - Jika pakai HP fisik (USB debugging), gunakan IP Laptop (misal: 192.168.1.x)
-      // - Jangan pakai 'localhost'
-      final url = Uri.parse('http://10.0.2.2/hotel_api/login_staff.php');
+      // 1. Tembak ke API Customer
+      // Gunakan 10.0.2.2 jika Emulator, atau IP Laptop jika HP Fisik
+      final url = Uri.parse('http://10.0.2.2/hotel_api/login_customer.php');
       
       final response = await http.post(
         url,
@@ -74,29 +64,30 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
         },
       );
 
-      // 4. Cek Respon Server
+      // 2. Cek Respon
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         if (data['status'] == 'success') {
-          // --- LOGIN BERHASIL ---
+          // --- LOGIN SUKSES ---
           if (mounted) {
-             ScaffoldMessenger.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Login Berhasil! Selamat datang.'),
                 backgroundColor: Colors.green,
               ),
             );
 
+            // ✅ UBAH: Navigasi ke CustomerHomeScreen
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (_) => const StaffMainScreen(initialIndex: 0),
+                builder: (_) => const CustomerHomeScreen(), // Pastikan nama class-nya ini
               ),
             );
           }
         } else {
-          // --- LOGIN GAGAL (Password Salah / Akun tak ada) ---
+          // --- LOGIN GAGAL ---
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -107,7 +98,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
           }
         }
       } else {
-        // --- ERROR SERVER (Misal: Nama file PHP salah) ---
+        // --- ERROR SERVER ---
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -117,20 +108,18 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
           );
         }
       }
-
     } catch (e) {
-      // --- ERROR KONEKSI (Internet mati / Server mati) ---
+      // --- ERROR KONEKSI ---
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal koneksi ke server. Pastikan XAMPP/Server nyala.\nError: $e'),
+            content: Text('Gagal koneksi. Cek internet/server.\nError: $e'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 4),
           ),
         );
       }
     } finally {
-      // 5. Matikan Loading (Apapun yang terjadi)
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -139,7 +128,6 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
     }
   }
 
-  // Widget Helper untuk Input Field
   Widget _buildTextField({
     required String hint,
     required IconData icon,
@@ -158,7 +146,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
         controller: controller, 
         validator: validator,
         obscureText: obscureText,
-        enabled: !_isLoading, // Disable input saat loading
+        enabled: !_isLoading, 
         style: const TextStyle(color: Colors.white),
         keyboardType: hint.contains('email') 
             ? TextInputType.emailAddress 
@@ -201,7 +189,6 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                     backgroundColor: AppTheme.cardBackground,
                   ),
                 ),
-                
                 const SizedBox(height: 40),
                 const Center(
                   child: HotelLogo(size: HotelLogoSize.medium, showTagline: false),
@@ -212,20 +199,20 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.emeraldGreen.withOpacity(0.2),
+                      color: AppTheme.cardBackground, 
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppTheme.emeraldGreen),
+                      border: Border.all(color: AppTheme.borderColor),
                     ),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.shield_outlined, color: AppTheme.emeraldGreen, size: 16),
+                        Icon(Icons.person_outline, color: Colors.white, size: 16),
                         SizedBox(width: 6),
                         Text(
-                          'Staff Portal',
+                          'Guest Login',
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppTheme.emeraldGreen,
+                            color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -236,7 +223,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                 
                 const SizedBox(height: 32),
                 const Text(
-                  'Staff Login',
+                  'Welcome Back',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -245,16 +232,16 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Access your management dashboard',
+                  'Sign in to book rooms and manage stays',
                   style: TextStyle(fontSize: 14, color: AppTheme.textGray),
                 ),
                 const SizedBox(height: 40),
                 
                 _buildTextField(
-                  hint: 'Staff email',
+                  hint: 'Email address',
                   icon: Icons.email_outlined,
                   controller: _emailController,
-                  validator: _validateGmailEmail,
+                  validator: _validateEmail,
                 ),
                 const SizedBox(height: 16),
                 
@@ -284,7 +271,6 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                 
                 const SizedBox(height: 32),
                 
-                // --- TOMBOL LOGIN DENGAN LOADING ---
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -298,17 +284,14 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: _isLoading
+                    child: _isLoading 
                         ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
+                            height: 24, 
+                            width: 24, 
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                           )
                         : const Text(
-                            'Sign In to Dashboard',
+                            'Sign In',
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                   ),
@@ -320,11 +303,11 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: const TextSpan(
-                      text: 'Need help accessing your account? ',
+                      text: 'Don\'t have an account? ',
                       style: TextStyle(color: AppTheme.textGray, fontSize: 12),
                       children: [
                         TextSpan(
-                          text: 'Contact IT Support',
+                          text: 'Create Account',
                           style: TextStyle(
                             color: AppTheme.emeraldLight,
                             fontWeight: FontWeight.w600,

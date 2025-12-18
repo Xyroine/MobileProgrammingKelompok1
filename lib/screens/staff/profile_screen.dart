@@ -12,6 +12,8 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        // Tombol back ini opsional. Jika ini adalah tab utama, 
+        // biasanya tidak perlu tombol back. Tapi saya biarkan sesuai kodemu.
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
