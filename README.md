@@ -73,7 +73,7 @@
 1.  Buka **XAMPP Control Panel**, jalankan **Apache** dan **MySQL**.
 2.  Akses **phpMyAdmin** (`localhost/phpmyadmin`).
 3.  Buat database baru dan pilih tab **Import**.
-4.  Gunakan file `.sql` yang tersedia di folder `api_login` proyek ini.
+4.  Gunakan file `.sql` yang tersedia di folder `database` proyek ini.
 5.  Pastikan folder API PHP sudah berada di direktori `htdocs` kamu.
 
 #### 2. Konfigurasi Flutter
