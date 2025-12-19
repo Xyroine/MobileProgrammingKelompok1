@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('John Doe', style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold)),
+                        const Text('Admin01', style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold)),
                         const Text('Hotel Manager', style: TextStyle(color: AppTheme.goldAccent, fontSize: 16)),
                         const SizedBox(height: 10),
                         Row(
@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildContactItem(Icons.email_outlined, 'Email', 'john.doe@hotel.com'),
+                  _buildContactItem(Icons.email_outlined, 'Email', 'admin@gmail.com'),
                   const Divider(color: AppTheme.borderColor, height: 24),
                   _buildContactItem(Icons.phone_outlined, 'Phone', '+62 812 3456 7890'),
                 ],
