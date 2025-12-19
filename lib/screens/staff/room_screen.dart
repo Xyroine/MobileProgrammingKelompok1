@@ -45,7 +45,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
     Room(
       id: '2',
       name: 'Deluxe Room 201',
-      status: RoomStatus.available,
+      status: RoomStatus.occupied,
       pricePerNight: 450,
       imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500',
     ),
